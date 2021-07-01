@@ -1,23 +1,95 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { debug } from 'react-native-reanimated';
+import { render } from 'react-dom';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const MyStack = () => {
   return (
     <NavigationContainer>
-      <View style={styles.container}>
-        <Text style={styles.title1}>Hack Tools</Text>
-        <Text style={styles.title2}>Questionário</Text>
-        <View style={styles.formContainer}>
-          <QuestionForm question = "Você está bem?"/>
-          <QuestionForm question = "Justifique sua resposta."/>
-        </View>
-        <StatusBar style="auto" />
-      </View>
+      <Stack.Navigator>
+        <Stack.Screen name="Menu" component={MainMenu} />
+        <Stack.Screen name="Criar Questionário" component={CreateForm} />
+        <Stack.Screen name="Questionário" component={AnswerForm} />
+        <Stack.Screen name="Respondidos" component={ViewForms}/>
+      </Stack.Navigator>
     </NavigationContainer>
   );
+};
+
+function MainMenu({navigation}) {
+  return (
+    <View style={styles.container}>
+      <View style={styles.menuContainer}>
+        <View style={styles.buttonContainer}>
+          <Button title="Criar Questionário" onPress={() => navigation.navigate("Criar Questionário")}/>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Responder Questionário" onPress={() => navigation.navigate("Questionário")}/>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Questionários Respondidos" onPress={() => navigation.navigate("Respondidos")}/>
+        </View>
+      </View>
+      <StatusBar style="auto" />
+    </View>
+  )
+}
+
+function CreateForm() {
+  var [questionAmount, setQuestionAmount] = useState(1)
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title1}>Hack Tools</Text>
+      <Text style={styles.title2}>Questionário</Text>
+      <View style={styles.formContainer}>
+        <AddQuestions questionAmount={questionAmount}/>
+        <Button title={"Adicionar questão" + questionAmount} onPress={() => setQuestionAmount(++questionAmount)}/>
+      </View>
+      <StatusBar style="auto" />
+    </View>
+  )
+}
+
+function AddQuestions(props){
+  for (let index = 0; index < props.questionAmount; index++)
+  {
+    return (
+      <render>
+        <QuestionForm question={"Pergunta " + (index + 1) + ":"} />
+      </render>
+    )
+  }
+}
+
+function AnswerForm({ navigation }) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title1}>Hack Tools</Text>
+      <Text style={styles.title2}>Questionário</Text>
+      <View style={styles.formContainer}>
+        <QuestionForm question="Você está bem?" />
+        <QuestionForm question="Justifique sua resposta." />
+        <Button title="Menu" onPress={() => navigation.navigate("Menu")} />
+      </View>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+function ViewForms({navigation}) {
+  return (
+    <View style={styles.container}>
+
+      <StatusBar style="auto" />
+    </View>
+  )
 }
 
 const QuestionForm = (props) => {
@@ -42,13 +114,15 @@ const QuestionForm = (props) => {
   );
 }
 
+export default MyStack;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    borderTopWidth: 50,
+    borderTopWidth: 10,
     borderTopColor: '#8000ff'
   },
   formContainer:{
@@ -56,6 +130,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     width: '90%',
     justifyContent: 'flex-start'
+  },
+  menuContainer:{
+    flex: 1,
+    width: '90%',
+    justifyContent: 'center',
+  },
+  buttonContainer:{
+    paddingTop: 15,
+    paddingBottom: 15
   },
   questionContainer:{
     paddingBottom: 15
