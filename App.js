@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, TouchableOpacity } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { debug } from 'react-native-reanimated';
@@ -50,22 +50,27 @@ function CreateForm() {
       <Text style={styles.title2}>Questionário</Text>
       <View style={styles.formContainer}>
         <AddQuestions questionAmount={questionAmount}/>
-        <Button title={"Adicionar questão" + questionAmount} onPress={() => setQuestionAmount(++questionAmount)}/>
+        <View style={styles.buttonContainer}>
+          <Button title="Adicionar questão" onPress={() => setQuestionAmount(++questionAmount)}/>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button title="Criar questionário" />
+        </View>
       </View>
       <StatusBar style="auto" />
     </View>
   )
 }
 
-function AddQuestions(props){
+function AddQuestions(props) {
+  let itemList = [];
   for (let index = 0; index < props.questionAmount; index++)
   {
-    return (
-      <render>
-        <QuestionForm question={"Pergunta " + (index + 1) + ":"} />
-      </render>
-    )
+    itemList.push(<QuestionForm question={"Pergunta " + (index + 1) + ":"} />)
   }
+  return (
+    <View>{itemList}</View>
+  )
 }
 
 function AnswerForm({ navigation }) {
@@ -101,7 +106,7 @@ const QuestionForm = (props) => {
       <View style={styles.answerBackground}>
         <TextInput
           style={{height: 75}}
-          placeholder = "Resposta"
+          placeholder = 'Resposta'
           textAlignVertical = "top"
           multiline = {true}
           numberOfLines = {4}
