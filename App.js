@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, TextInput, View, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, ScrollView } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { debug } from 'react-native-reanimated';
@@ -48,7 +48,7 @@ function CreateForm() {
     <View style={styles.container}>
       <Text style={styles.title1}>Hack Tools</Text>
       <Text style={styles.title2}>Questionário</Text>
-      <View style={styles.formContainer}>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.buttonContainer}>
         <AddQuestions questionAmount={questionAmount}/>
         <View style={styles.buttonContainer}>
           <Button title="Adicionar questão" onPress={() => setQuestionAmount(++questionAmount)}/>
@@ -56,7 +56,7 @@ function CreateForm() {
         <View style={styles.buttonContainer}>
           <Button title="Criar questionário" />
         </View>
-      </View>
+      </ScrollView>
       <StatusBar style="auto" />
     </View>
   )
@@ -135,6 +135,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     width: '90%',
     justifyContent: 'flex-start'
+  },
+  scrollContainer:{
+    flex: 1,
+    width: '90%',
+    alignSelf: 'center',
   },
   menuContainer:{
     flex: 1,
